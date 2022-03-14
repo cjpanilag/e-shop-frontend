@@ -38,6 +38,23 @@ export default {
 
   actions: {
     /**
+     *
+     * @param {*} param0
+     * @param {*} data
+     */
+    async createShop({ commit }, data) {
+      let response;
+      try {
+        response = await axios.post("/store", data);
+        let { code, message } = response.data;
+        commit("SET_RESPONSE", { code, message });
+      } catch (error) {
+        let { code, message } = error.response.data;
+        commit("SET_RESPONSE", { code, message });
+      }
+    },
+
+    /**
      * GET SINGLE SHOP DETAILS
      * @param {*} param0
      * @param {*} shopId

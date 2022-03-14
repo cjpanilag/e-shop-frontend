@@ -5,7 +5,18 @@
     </div>
     <div v-if="!isLoading">
       <div class="ma-3 pa-3 text-center" v-if="shops.length == 0">
-        <span class="text-button">No data</span>
+        <div class="ma-3">
+          <span class="text-button">Create Shop</span>
+        </div>
+        <div class="ma-3">
+          <v-btn
+            @click="isCreateFormDialogVisible = true"
+            class="teal darken-3"
+            dark
+          >
+            <v-icon dark> mdi-store-plus </v-icon>
+          </v-btn>
+        </div>
       </div>
       <div v-if="shops.length > 0">
         <v-card
@@ -26,10 +37,10 @@
                 {{ shop.name }}
               </p>
             </div>
-            <v-spacer></v-spacer>
+            <!-- <v-spacer></v-spacer>
             <v-btn icon>
               <v-icon>mdi-pencil</v-icon>
-            </v-btn>
+            </v-btn> -->
           </v-card-title>
           <v-divider></v-divider>
           <div class="mt-3 d-flex flex-row">
@@ -56,25 +67,32 @@
         </v-card>
       </div>
     </div>
+    <CreateShopFormDialog
+      :dialog.sync="isCreateFormDialogVisible"
+    ></CreateShopFormDialog>
   </div>
 </template>
 
 <script>
 import { mapActions, mapGetters } from "vuex";
+import CreateShopFormDialog from "@/components/shop/CreateShopFormDialog";
 
 export default {
   name: "ShopList",
 
+  components: { CreateShopFormDialog },
+
   data() {
     return {
       isLoading: false,
+      isCreateFormDialogVisible: false,
     };
   },
 
   async mounted() {
     this.isLoading = true;
     await this.getOwnerShop();
-    this.isLoading = this.shops.length > 0 ? false : true;
+    this.isLoading = false;
   },
 
   computed: {
@@ -86,6 +104,7 @@ export default {
   methods: {
     ...mapActions({
       getOwnerShop: "shop/getOwnerShop",
+      createShop: "shop/createShop",
     }),
 
     seeProduct(id) {
